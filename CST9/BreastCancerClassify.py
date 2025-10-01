@@ -96,9 +96,16 @@ st.markdown("""
 @st.cache_resource
 def load_model():
     """Load the pre-trained model"""
-    with open('neural_network_model.pkl', 'rb') as f:
+    import os
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    model_path = os.path.join(script_dir, 'neural_network_model.pkl')
+    scaler_path = os.path.join(script_dir, 'scaler.pkl')
+    
+    with open(model_path, 'rb') as f:
         model = pickle.load(f)
-    with open('scaler.pkl', 'rb') as f:
+    with open(scaler_path, 'rb') as f:
         scaler = pickle.load(f)
     return model, scaler
 
@@ -473,11 +480,15 @@ if input_method == "Manual Entry":
                 st.markdown("## 📋 Diagnosis Results")
                 
                 # Play audio and show animations based on prediction
+                import os
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                
                 if prediction == 'M':
                     # Malignant - play shocked.mp3 and show snow animation
                     st.snow()  # Snow animation for somber effect
                     try:
-                        audio_file = open('shocked.mp3', 'rb')
+                        audio_path = os.path.join(script_dir, 'shocked.mp3')
+                        audio_file = open(audio_path, 'rb')
                         audio_bytes = audio_file.read()
                         st.audio(audio_bytes, format='audio/mp3', autoplay=True)
                         audio_file.close()
@@ -487,7 +498,8 @@ if input_method == "Manual Entry":
                     # Benign - play clapping.mp3 and show balloons animation
                     st.balloons()  # Celebration animation
                     try:
-                        audio_file = open('clapping.mp3', 'rb')
+                        audio_path = os.path.join(script_dir, 'clapping.mp3')
+                        audio_file = open(audio_path, 'rb')
                         audio_bytes = audio_file.read()
                         st.audio(audio_bytes, format='audio/mp3', autoplay=True)
                         audio_file.close()
