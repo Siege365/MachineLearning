@@ -93,9 +93,16 @@ st.markdown("""
 @st.cache_resource
 def load_model():
     """Load the pre-trained model"""
-    with open('neural_network_model.pkl', 'rb') as f:
+    import os
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    model_path = os.path.join(script_dir, 'neural_network_model.pkl')
+    scaler_path = os.path.join(script_dir, 'scaler.pkl')
+    
+    with open(model_path, 'rb') as f:
         model = pickle.load(f)
-    with open('scaler.pkl', 'rb') as f:
+    with open(scaler_path, 'rb') as f:
         scaler = pickle.load(f)
     return model, scaler
 
