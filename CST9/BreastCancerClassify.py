@@ -510,50 +510,59 @@ if input_method == "Manual Entry":
                 col1, col2, col3 = st.columns(3)
                 
                 with col1:
-                    st.markdown("""
-                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
-                            <h3 style='text-align: center; color: #667eea;'>Prediction</h3>
-                        """, unsafe_allow_html=True)
-                    
                     if prediction == 'M':
+                        # Red text for malignant
                         st.markdown("""
-                            <h1 style='text-align: center; color: #e74c3c;'>⚠️ MALIGNANT</h1>
+                            <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                                <h3 style='text-align: center; color: #e74c3c;'>Prediction</h3>
+                                <h1 style='text-align: center; color: #e74c3c;'>⚠️ MALIGNANT</h1>
                             </div>
                             """, unsafe_allow_html=True)
                     else:
+                        # Default color for benign
                         st.markdown("""
-                            <h1 style='text-align: center; color: #27ae60;'>✅ BENIGN</h1>
+                            <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                                <h3 style='text-align: center; color: #667eea;'>Prediction</h3>
+                                <h1 style='text-align: center; color: #27ae60;'>✅ BENIGN</h1>
                             </div>
                             """, unsafe_allow_html=True)
                 
                 with col2:
-                    st.markdown("""
-                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
-                            <h3 style='text-align: center; color: #667eea;'>Confidence</h3>
-                        """, unsafe_allow_html=True)
-                    
                     confidence = max(prediction_proba) * 100
                     st.markdown(f"""
-                        <h1 style='text-align: center; color: #3498db;'>{confidence:.2f}%</h1>
+                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                            <h3 style='text-align: center; color: #667eea;'>Confidence</h3>
+                            <h1 style='text-align: center; color: #3498db;'>{confidence:.2f}%</h1>
                         </div>
                         """, unsafe_allow_html=True)
                 
                 with col3:
-                    st.markdown("""
+                    # Determine risk level and color
+                    if prediction == 'M':
+                        if confidence >= 80:
+                            risk_level = "HIGH"
+                            risk_color = "#e74c3c"  # Red
+                            risk_icon = "🔴"
+                        else:
+                            risk_level = "MODERATE"
+                            risk_color = "#f39c12"  # Yellow/Orange
+                            risk_icon = "🟡"
+                    else:
+                        if confidence >= 80:
+                            risk_level = "LOW"
+                            risk_color = "#27ae60"  # Green
+                            risk_icon = "🟢"
+                        else:
+                            risk_level = "MODERATE"
+                            risk_color = "#f39c12"  # Yellow/Orange
+                            risk_icon = "🟡"
+                    
+                    st.markdown(f"""
                         <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
                             <h3 style='text-align: center; color: #667eea;'>Risk Level</h3>
+                            <h1 style='text-align: center; color: {risk_color};'>{risk_icon} {risk_level}</h1>
+                        </div>
                         """, unsafe_allow_html=True)
-                    
-                    if prediction == 'M':
-                        st.markdown("""
-                            <h1 style='text-align: center; color: #e74c3c;'>HIGH</h1>
-                            </div>
-                            """, unsafe_allow_html=True)
-                    else:
-                        st.markdown("""
-                            <h1 style='text-align: center; color: #27ae60;'>LOW</h1>
-                            </div>
-                            """, unsafe_allow_html=True)
             
                 # Probability chart
                 st.markdown("### 📊 Probability Distribution")
@@ -671,7 +680,6 @@ with st.sidebar:
         **Algorithm**: Neural Network  
         **Features**: 30 measurements  
         **Classes**: Benign (B) / Malignant (M)  
-        **Training**: Automatically trained on your dataset
     """)
     
     st.markdown("### 📊 Dataset")
