@@ -93,17 +93,11 @@ st.markdown("""
 @st.cache_resource
 def load_model():
     """Load the pre-trained model"""
-    try:
-        with open('neural_network_model.pkl', 'rb') as f:
-            model = pickle.load(f)
-        with open('scaler.pkl', 'rb') as f:
-            scaler = pickle.load(f)
-        return model, scaler
-    except FileNotFoundError as e:
-        st.error(f"❌ Model files not found: {e}")
-        st.error("Please ensure 'neural_network_model.pkl' and 'scaler.pkl' are in the same directory as this script.")
-        st.info("💡 You need to train and save your model first before using this app.")
-        return None, None\
+    with open('neural_network_model.pkl', 'rb') as f:
+        model = pickle.load(f)
+    with open('scaler.pkl', 'rb') as f:
+        scaler = pickle.load(f)
+    return model, scaler
 
 
 # Load the model
@@ -480,11 +474,15 @@ if input_method == "Manual Entry":
                 st.markdown("## 📋 Diagnosis Results")
                 
                 # Play audio and show animations based on prediction
+                import os
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                
                 if prediction == 'M':
                     # Malignant - play shocked.mp3 and show snow animation
                     st.snow()  # Snow animation for somber effect
                     try:
-                        audio_file = open('shocked.mp3', 'rb')
+                        audio_path = os.path.join(script_dir, 'shocked.mp3')
+                        audio_file = open(audio_path, 'rb')
                         audio_bytes = audio_file.read()
                         st.audio(audio_bytes, format='audio/mp3', autoplay=True)
                         audio_file.close()
@@ -494,7 +492,8 @@ if input_method == "Manual Entry":
                     # Benign - play clapping.mp3 and show balloons animation
                     st.balloons()  # Celebration animation
                     try:
-                        audio_file = open('clapping.mp3', 'rb')
+                        audio_path = os.path.join(script_dir, 'clapping.mp3')
+                        audio_file = open(audio_path, 'rb')
                         audio_bytes = audio_file.read()
                         st.audio(audio_bytes, format='audio/mp3', autoplay=True)
                         audio_file.close()
@@ -505,50 +504,59 @@ if input_method == "Manual Entry":
                 col1, col2, col3 = st.columns(3)
                 
                 with col1:
-                    st.markdown("""
-                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
-                            <h3 style='text-align: center; color: #667eea;'>Prediction</h3>
-                        """, unsafe_allow_html=True)
-                    
                     if prediction == 'M':
+                        # Red text for malignant
                         st.markdown("""
-                            <h1 style='text-align: center; color: #e74c3c;'>⚠️ MALIGNANT</h1>
+                            <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                                <h3 style='text-align: center; color: #e74c3c;'>Prediction</h3>
+                                <h1 style='text-align: center; color: #e74c3c;'>⚠️ MALIGNANT</h1>
                             </div>
                             """, unsafe_allow_html=True)
                     else:
+                        # Default color for benign
                         st.markdown("""
-                            <h1 style='text-align: center; color: #27ae60;'>✅ BENIGN</h1>
+                            <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                                <h3 style='text-align: center; color: #667eea;'>Prediction</h3>
+                                <h1 style='text-align: center; color: #27ae60;'>✅ BENIGN</h1>
                             </div>
                             """, unsafe_allow_html=True)
                 
                 with col2:
-                    st.markdown("""
-                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
-                            <h3 style='text-align: center; color: #667eea;'>Confidence</h3>
-                        """, unsafe_allow_html=True)
-                    
                     confidence = max(prediction_proba) * 100
                     st.markdown(f"""
-                        <h1 style='text-align: center; color: #3498db;'>{confidence:.2f}%</h1>
+                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                            <h3 style='text-align: center; color: #667eea;'>Confidence</h3>
+                            <h1 style='text-align: center; color: #3498db;'>{confidence:.2f}%</h1>
                         </div>
                         """, unsafe_allow_html=True)
                 
                 with col3:
-                    st.markdown("""
+                    # Determine risk level and color
+                    if prediction == 'M':
+                        if confidence >= 80:
+                            risk_level = "HIGH"
+                            risk_color = "#e74c3c"  # Red
+                            risk_icon = "🔴"
+                        else:
+                            risk_level = "MODERATE"
+                            risk_color = "#f39c12"  # Yellow/Orange
+                            risk_icon = "🟡"
+                    else:
+                        if confidence >= 80:
+                            risk_level = "LOW"
+                            risk_color = "#27ae60"  # Green
+                            risk_icon = "🟢"
+                        else:
+                            risk_level = "MODERATE"
+                            risk_color = "#f39c12"  # Yellow/Orange
+                            risk_icon = "🟡"
+                    
+                    st.markdown(f"""
                         <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
                             <h3 style='text-align: center; color: #667eea;'>Risk Level</h3>
+                            <h1 style='text-align: center; color: {risk_color};'>{risk_icon} {risk_level}</h1>
+                        </div>
                         """, unsafe_allow_html=True)
-                    
-                    if prediction == 'M':
-                        st.markdown("""
-                            <h1 style='text-align: center; color: #e74c3c;'>HIGH</h1>
-                            </div>
-                            """, unsafe_allow_html=True)
-                    else:
-                        st.markdown("""
-                            <h1 style='text-align: center; color: #27ae60;'>LOW</h1>
-                            </div>
-                            """, unsafe_allow_html=True)
             
                 # Probability chart
                 st.markdown("### 📊 Probability Distribution")
@@ -666,7 +674,6 @@ with st.sidebar:
         **Algorithm**: Neural Network  
         **Features**: 30 measurements  
         **Classes**: Benign (B) / Malignant (M)  
-        **Training**: Automatically trained on your dataset
     """)
     
     st.markdown("### 📊 Dataset")
