@@ -507,24 +507,30 @@ if input_method == "Manual Entry":
                     if prediction == 'M':
                         # Red text for malignant
                         st.markdown("""
-                            <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
-                                <h3 style='text-align: center; color: #e74c3c;'>Prediction</h3>
-                                <h1 style='text-align: center; color: #e74c3c;'>⚠️ MALIGNANT</h1>
+                            <div style='background-color: #0e1117; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                                <h3 style='text-align: center; color: #667eea;'>Prediction</h3>
+                                <div style='text-align: center;'>
+                                    <div style='display: inline-block; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 25px solid #e74c3c; margin-right: 10px; vertical-align: middle;'></div>
+                                    <h1 style='display: inline-block; color: #e74c3c; margin: 0; vertical-align: middle;'>MALIGNANT</h1>
+                                </div>
                             </div>
                             """, unsafe_allow_html=True)
                     else:
                         # Default color for benign
                         st.markdown("""
-                            <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                            <div style='background-color: #0e1117; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
                                 <h3 style='text-align: center; color: #667eea;'>Prediction</h3>
-                                <h1 style='text-align: center; color: #27ae60;'>✅ BENIGN</h1>
+                                <div style='text-align: center;'>
+                                    <div style='display: inline-block; width: 20px; height: 12px; border: 3px solid #27ae60; border-top: none; border-right: none; transform: rotate(-45deg); margin-right: 15px; margin-bottom: 5px; vertical-align: middle;'></div>
+                                    <h1 style='display: inline-block; color: #27ae60; margin: 0; vertical-align: middle;'>BENIGN</h1>
+                                </div>
                             </div>
                             """, unsafe_allow_html=True)
-                
+
                 with col2:
                     confidence = max(prediction_proba) * 100
                     st.markdown(f"""
-                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                        <div style='background-color: #0e1117; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
                             <h3 style='text-align: center; color: #667eea;'>Confidence</h3>
                             <h1 style='text-align: center; color: #3498db;'>{confidence:.2f}%</h1>
                         </div>
@@ -536,25 +542,24 @@ if input_method == "Manual Entry":
                         if confidence >= 80:
                             risk_level = "HIGH"
                             risk_color = "#e74c3c"  # Red
-                            risk_icon = "🔴"
                         else:
                             risk_level = "MODERATE"
                             risk_color = "#f39c12"  # Yellow/Orange
-                            risk_icon = "🟡"
                     else:
                         if confidence >= 80:
                             risk_level = "LOW"
                             risk_color = "#27ae60"  # Green
-                            risk_icon = "🟢"
                         else:
                             risk_level = "MODERATE"
                             risk_color = "#f39c12"  # Yellow/Orange
-                            risk_icon = "🟡"
                     
                     st.markdown(f"""
-                        <div style='background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                        <div style='background-color: #0e1117; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
                             <h3 style='text-align: center; color: #667eea;'>Risk Level</h3>
-                            <h1 style='text-align: center; color: {risk_color};'>{risk_icon} {risk_level}</h1>
+                            <div style='text-align: center;'>
+                                <div style='display: inline-block; width: 30px; height: 30px; background-color: {risk_color}; border-radius: 50%; margin-right: 10px; vertical-align: middle;'></div>
+                                <h1 style='display: inline-block; color: {risk_color}; margin: 0; vertical-align: middle;'>{risk_level}</h1>
+                            </div>
                         </div>
                         """, unsafe_allow_html=True)
             
@@ -693,21 +698,18 @@ with st.sidebar:
         2. Click **PREDICT DIAGNOSIS**
         3. View results and probability distribution
     """)
-    
-    st.markdown("---")
-    st.markdown("Made with ❤️ using Streamlit")
 
 # Copyright footer
 st.markdown("---")
 st.markdown("""
-    <div style='text-align: center; padding: 20px; background-color: black; border-radius: 10px; margin-top: 30px;'>
-        <p style='color: white; font-size: 14px; margin: 0;'>
+    <div style='text-align: center; padding: 20px; background-color: #0e1117; border-radius: 10px; margin-top: 30px;'>
+        <p style='color: white; font-size: 18px; margin: 0;'>
             © 2025 Breast Cancer Diagnosis Predictor. All Rights Reserved.
         </p>
-        <p style='color: white; font-size: 12px; margin-top: 5px;'>
+        <p style='color: white; font-size: 16px; margin-top: 5px;'>
             Developed for educational and research purposes only. Not for clinical use.
         </p>
-        <p style='color: white; font-size: 12px; margin-top: 10px;'>
+        <p style='color: white; font-size: 16px; margin-top: 10px;'>
             👤 Developed by: <strong style='color: #667eea;'>Nathaniel Keene Merka, Justin Troy Rosalada, Lloyd Justin Felecilda</strong><br>
             📧 Contact: <a href='mailto:nkmerka.work@gmail.com' style='color: #667eea; text-decoration: none;'>nkmerka.work@gmail.com</a><br>
             💻 GitHub: <a href='https://github.com/Siege365' target='_blank' style='color: #667eea; text-decoration: none;'>github.com/Siege365</a>
