@@ -2,9 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
 import pickle
 
 # Page configuration
@@ -96,15 +93,25 @@ st.markdown("""
 @st.cache_resource
 def load_model():
     """Load the pre-trained model"""
-    with open('neural_network_model.pkl', 'rb') as f:
-        model = pickle.load(f)
-    with open('scaler.pkl', 'rb') as f:
-        scaler = pickle.load(f)
-    return model, scaler
+    try:
+        with open('neural_network_model.pkl', 'rb') as f:
+            model = pickle.load(f)
+        with open('scaler.pkl', 'rb') as f:
+            scaler = pickle.load(f)
+        return model, scaler
+    except FileNotFoundError as e:
+        st.error(f"❌ Model files not found: {e}")
+        st.error("Please ensure 'neural_network_model.pkl' and 'scaler.pkl' are in the same directory as this script.")
+        st.info("💡 You need to train and save your model first before using this app.")
+        return None, None\
 
 
 # Load the model
 model, scaler = load_model()
+
+# Check if model loaded successfully
+if model is None or scaler is None:
+    st.stop()  # Stop execution if model files are missing
 
 # File Upload Section
 st.markdown("### 📁 Input Method")
