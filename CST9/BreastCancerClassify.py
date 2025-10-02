@@ -706,14 +706,14 @@ with st.sidebar:
 # Copyright footer
 st.markdown("---")
 st.markdown("""
-    <div style='text-align: center; padding: 20px; background-color: #f5f7fa; border-radius: 10px; margin-top: 30px;'>
-        <p style='color: #666; font-size: 14px; margin: 0;'>
+    <div style='text-align: center; padding: 20px; background-color: black; border-radius: 10px; margin-top: 30px;'>
+        <p style='color: white; font-size: 14px; margin: 0;'>
             © 2025 Breast Cancer Diagnosis Predictor. All Rights Reserved.
         </p>
-        <p style='color: #888; font-size: 12px; margin-top: 5px;'>
+        <p style='color: white; font-size: 12px; margin-top: 5px;'>
             Developed for educational and research purposes only. Not for clinical use.
         </p>
-        <p style='color: #888; font-size: 12px; margin-top: 10px;'>
+        <p style='color: white; font-size: 12px; margin-top: 10px;'>
             👤 Developed by: <strong style='color: #667eea;'>Nathaniel Keene Merka, Justin Troy Rosalada, Lloyd Justin Felecilda</strong><br>
             📧 Contact: <a href='mailto:nkmerka.work@gmail.com' style='color: #667eea; text-decoration: none;'>nkmerka.work@gmail.com</a><br>
             💻 GitHub: <a href='https://github.com/Siege365' target='_blank' style='color: #667eea; text-decoration: none;'>github.com/Siege365</a>
